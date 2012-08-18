@@ -1,5 +1,56 @@
-Hallo {{ user.username }}!
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
 
-<form method="POST" action="logout">
-	<input type="submit" value="logout"/>
-</form>
+      <a href="/" class="brand" href="#">kime yo</a>
+      <div class="btn-group pull-right">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          {{ user.username }}
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a style="cursor: pointer" id="logout">Sign Out</a></li>
+        </ul>
+      </div>
+      <div class="nav-collapse">
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+          <li class="nav-header">projects</li>
+	  {% for project in projects %}
+             <li><a href="/projects?pi={{ project.id  }}&os=0" class="project">{{ project.name }} ({{ project.deadline|date:"Y-m-d" }})</a></li>
+	  {% endfor %}
+	  </ul>
+      </div>
+    </div>
+    <div class="span9">
+      <div class="hero-unit">
+	{{ time_entries  }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+
+$('#logout').bind('click', function(e){
+	sessionStorage.clear();
+	window.location.href = "/logout";
+})
+
+$(document).ajaxError(function(event, XMLHttpRequest, ajaxOptions, thrownError){
+    // open the Dajngo Debug screen in a new window: 
+    var w = window.open('','','');
+    w.document.write(XMLHttpRequest.responseText);          
+});
+
+</script>

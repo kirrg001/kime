@@ -1,0 +1,478 @@
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span11">
+			{% for user in users.all %}
+				user
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row-fluid">
+	    <div id="time" class="span11">
+	    	<table class="table" id="timer_table" style="table-layout:fixed;">
+				<tr>
+				  <td style="background-color: white" width="100px"><div id="start_time">start time</div></td>
+				  <td style="background-color: white" width="100px"><div id="end_time">end time</div></td>
+				  <td style="background-color: white" width="100px"><div id="date">day</div></td>
+				  <td style="background-color: white" width="400px"><div contenteditable id="description">description</div></td>
+				  <td style="background-color: white" width="30px" id="upload_time_td"></td>				  
+				  <td style="background-color: white" width="30px" id="clear_time_td"></td>
+				</tr>	  
+			</table>
+			<button id="timer-button" type="submit" class="btn-large btn-success" style="width:200px">
+			  start
+			</button>
+	    </div>
+  </div>
+	
+	
+	
+  <div class="row-fluid" style="margin-top: 50px">
+    <div class="span11">
+      <table class="table" style="table-layout:fixed">
+      	<!--
+		<tr>
+		  <th width="60px"></th>
+		  <th width="100px">start time</th>
+		  <th width="100px">end time</th>
+		  <th width="150px">day</th>
+		  <th width="300px">description</th>
+		  <th width="30px"></th>
+		  <th width="30px"></th>
+		<tr>
+		-->
+	      {% for entry in time_entries|slice:limit %}
+			<tr id="{{ entry.id }}" class="tr_entry" > 
+				<td class="hours" width="60px" style="font-weight: 500; border: 0 !important;"></td>
+				<td width="100px" style="border-left: 1px solid rgba(0,0,0,0.2); border-top: 0 !important; text-align: center"><div id="st">{{ entry.start_time|time:"H:i:s" }}</div></td>
+				<td width="10px" style="border: 0 !important">-</td>
+				<td width="100px" style="border: 0 !important; text-align: center"><div id="et">{{ entry.end_time|time:"H:i:s" }}</div></td>			  
+				<td width="150px" style="border: 0 !important"><div id="d">{{ entry.day|date:"Y-m-d" }}</div></td>
+				<td width="300px" style="word-wrap: break-word; border: 0 !important"><div id="des">{{ entry.description }}</div></td>
+				<td width="30px" style="border: 0 !important"><i style="cursor: pointer" class="icon-edit edit_time_entry" id="{{ entry.id }}"></i></td>
+				<td width="30px" style="border: 0 !important"><i class="icon-remove remove_time_entry" id="{{ entry.id }}" style="cursor: pointer"></i></td>
+			</tr>
+		  {% endfor %}
+		  </table>
+		  
+		  
+			<div class="pagination">
+			  <ul>			  	
+			  	{% for i in number_of_entries %}
+			  		{% if os == i %}
+			  			<li class="active"><a href="/projects?pi={{ pi }}&os={{ i }}">{{ i }}</a></li>
+			  		{% else %}
+			  			<li><a href="/projects?pi={{ pi }}&os={{ i }}">{{ i }}</a></li>
+			  		{% endif %}			  	
+			  	{% endfor %}			  	
+			  </ul>
+			</div>
+		  
+		  
+		  </br>
+		 </br>
+		 <table class="table" >
+			<tr>
+				<td class="sum" width="200px" style="font-weight: 300; font-size: 60px; border: 0 !important"></td>				
+			</tr>
+      	</table>
+      	</br>
+		<canvas id="canvas"></canvas>
+		
+
+
+    </div>
+  </div>
+</div>
+
+
+{% for entry in time_entries %}
+	<div class="canvas_ele">
+		<div class="canvas_start_time" style="display: none">{{ entry.start_time|time:"H:i:s" }}</div>
+		<div class="canvas_end_time" style="display: none">{{ entry.end_time|time:"H:i:s" }}</div>
+		<div class="canvas_date" style="display: none">{{entry.day|date:"Y-m-d"}}</div>
+	</div>
+{% endfor %}
+
+
+
+<script>
+sum = undefined;
+
+function addTimes(t1, t2){
+	t1=t1.split(/\D/);
+	t2=t2.split(/\D/);
+	var x1=t1[0]*60*60 + t1[1]*60 + parseInt(t1[2]);
+	var x2=t2[0]*60*60 + t2[1]*60 + parseInt(t2[2]);
+	var s=x1+x2;
+	var m=Math.floor(s/60);	
+	s=s%60;		
+	var h= Math.floor(m/60); 
+	m=m%60;		
+	result = h+':'+m+':'+s	
+	return result
+}
+
+$('.tr_entry').each(function(index, ele){	
+	var st = $(ele).find('#st').html();
+	var et = $(ele).find('#et').html();
+	var d = $(ele).find('#d').html();
+	var fd = new Date(d + " " + st);	
+	var ld = new Date(d + " " + et);
+	var dif;
+	if(ld < fd){
+		dif = new TimeSpan(fd-ld);
+		var temp = new Date(d + " 23:59:59")
+		var temp0 = temp.next();		
+		var temp1 = new Date(temp0.toString("yyyy-MM-dd") + " 00:00:00")		
+		var temp2 = new TimeSpan(temp-fd).toString();		
+		var temp3 = new TimeSpan(ld-temp1).toString();		
+		var result = addTimes(temp3, temp2);		
+		dif = result;
+	}else{
+		dif = new TimeSpan(ld-fd);
+		dif = dif.toString();
+	}
+	var h = $(ele).find('.hours');	
+	
+	var dif_split = dif.split(":");
+	var dif_h = dif_split[0];
+	var dif_m = dif_split[1];
+	var dif_s = dif_split[2];
+	
+	if(dif_h.toString().length == 1){
+		dif_h = "0" + dif_h;
+	}
+	
+	if(dif_m.toString().length == 1){
+		dif_m = "0" + dif_m;
+	}
+	
+	if(dif_s.toString().length == 1){
+		dif_s = "0" + dif_s;
+	}
+	
+	$(h).html(dif_h + ":" + dif_m + ":" + dif_s);
+});
+
+$('.canvas_ele').each(function(index, ele){	
+	var st = $(ele).find('.canvas_start_time').html();
+	var et = $(ele).find('.canvas_end_time').html();
+	var d = $(ele).find('.canvas_date').html();
+	var fd = new Date(d + " " + st);	
+	var ld = new Date(d + " " + et);
+	var dif;
+	if(ld < fd){
+		dif = new TimeSpan(fd-ld);
+		var temp = new Date(d + " 23:59:59")
+		var temp0 = temp.next();		
+		var temp1 = new Date(temp0.toString("yyyy-MM-dd") + " 00:00:00")		
+		var temp2 = new TimeSpan(temp-fd).toString();		
+		var temp3 = new TimeSpan(ld-temp1).toString();		
+		var result = addTimes(temp3, temp2);		
+		dif = result;
+	}else{
+		dif = new TimeSpan(ld-fd);
+		dif = dif.toString();
+	}
+	
+	if(sum){
+		sum = addTimes(dif, sum);	
+	}else{
+		sum = dif;
+	}
+})
+
+
+var sum_split = sum.split(":");
+var sum_h = sum_split[0];
+var sum_m = sum_split[1];
+var sum_s = sum_split[2];
+
+if(sum_h.toString().length == 1){
+	sum_h = "0" + sum_h;
+}
+
+if(sum_m.toString().length == 1){
+	sum_m = "0" + sum_m;
+}
+
+if(sum_s.toString().length == 1){
+	sum_s = "0" + sum_s;
+}
+
+$('.sum').html(sum_h + ":" + sum_m + ":" + sum_s);
+
+
+if(sessionStorage.end_time){	
+	$('#start_time').html(sessionStorage.start_time);
+	$('#date').html(sessionStorage.day);
+	$('#description').html(sessionStorage.description);
+	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer" class="icon-ok"></i>');
+	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer" class="icon-remove"></i>');
+	$('#upload_time').bind('click', upload_time_td);
+	$('#clear_time').bind('click', clear_time_td);
+	
+	var et = sessionStorage.end_time;	
+	var splitted = et.split(":");	
+	cur_date = Date.today().set({hour: parseInt(splitted[0]), minute: parseInt(splitted[1]), second: parseInt(splitted[2])});
+	cur_time = cur_date.getTimeOfDay();
+	
+	if(sessionStorage.active_timer){	
+		$('#timer-button').addClass('btn-danger');	
+	    $('#timer-button').removeClass('btn-success');
+    	$('#timer-button').html('pause');	
+		start_interval(cur_date);
+	}else{
+		$('#timer-button').removeClass('btn-danger');
+	    $('#timer-button').addClass('btn-success');
+	    $('#timer-button').addClass('resume');
+    	$('#timer-button').html('resume');
+		$('#end_time').html(cur_time.toString());
+	}
+}
+
+
+
+function start_interval(cur_d){	
+	ct = cur_d.getTimeOfDay()
+	$('#end_time').html(ct.toString());
+	
+	interval = setInterval(function(){			
+		cur_d = cur_d.addSeconds(1);
+		ct = cur_d.getTimeOfDay();		
+		$('#end_time').html(ct.toString())	
+		sessionStorage.end_time = $('#end_time').html();
+		sessionStorage.description = $('#description').html();
+	}, 1000);
+}
+
+$('#timer-button').bind('click', function(e){		
+	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer" class="icon-ok"></i>');
+	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer" class="icon-remove"></i>');
+	$('#upload_time').bind('click', upload_time_td);
+	$('#clear_time').bind('click', clear_time_td);
+	
+	
+	//set to resume
+	if($('#timer-button').hasClass('btn-danger')){
+		clearInterval(interval);
+		$('#timer-button').removeClass('btn-danger');
+	    $('#timer-button').addClass('btn-success');
+	    $('#timer-button').addClass('resume');
+    	$('#timer-button').html('resume');	    
+    	sessionStorage.removeItem("active_timer");    	
+	}else if($('#timer-button').hasClass('resume')){		
+		start_interval(cur_date);		
+		$('#timer-button').addClass('btn-danger');
+	    $('#timer-button').removeClass('btn-success');
+	    $('#timer-button').removeClass('resume');
+    	$('#timer-button').html('pause');
+    	sessionStorage.active_timer = true;
+	}else{		
+		cur_date = new Date();	
+		cur_time = cur_date.getTimeOfDay()				
+		
+		$('#timer-button').addClass('btn-danger');	
+	    $('#timer-button').removeClass('btn-success');
+	    $('#timer-button').removeClass('resume');
+    	$('#timer-button').html('pause');
+    			
+		$('#start_time').html(cur_time.toString());
+		$('#date').html(cur_date.toString("yyyy-MM-dd"));
+		sessionStorage.start_time = $('#start_time').html();
+		sessionStorage.day = $('#date').html();
+		start_interval(cur_date);
+		sessionStorage.active_timer = true;
+	}
+});
+
+
+
+function clear_time_td(e){
+	sessionStorage.clear();
+	$('#start_time').html("start time");
+	$('#end_time').html("end time");
+	$('#date').html("day");
+	$('#description').html("description");
+	$('#upload_time_td').html('');
+	$('#clear_time_td').html('');
+	$('#timer-button').removeClass('btn-danger');
+	$('#timer-button').removeClass('resume');
+    $('#timer-button').addClass('btn-success');    
+	$('#timer-button').html('start');	
+}
+
+
+function upload_time_td(e){
+	var stf = $('#start_time').html();
+	var etf = $('#end_time').html();
+	var df = $('#date').html();
+	var ds = $('#description').html();
+	var pi = window.location.search.split('=')[1].split("&")[0]	
+	var data = {"start_time": stf , "end_time": etf, "day": df, "pi": pi, "description": ds}; 	 
+	
+	$.ajax({'url': '/save_time_entry/', 'type': 'POST', 'dataType': 'JSON', 'data': data, 'success': function(obj){
+		window.location.reload();
+		sessionStorage.clear();
+	}});
+}
+
+
+
+$('.remove_time_entry').bind('click', function(e){
+	$.ajax({'url': '/remove_time_entry/', 'type': 'POST', 'dataType': 'JSON', 'data': {'id':e.srcElement.id}, 'success': function(obj){
+		window.location.reload();
+	}});
+});
+
+$('.edit_time_entry').bind('click', function(e){
+	
+	if($(e.srcElement).hasClass('icon-ok')){		
+		$(e.srcElement).addClass('icon-edit');
+		$(e.srcElement).removeClass('icon-ok');
+		
+		data = {}
+		
+		$('.tr_entry#' + e.srcElement.id).children().each(function(index, child){			
+			var td_div = $(child).find('div');			
+			if(td_div){
+				$(td_div).attr('contenteditable', false);				
+				data[$(td_div[0]).attr('id')] = $(td_div).html();
+			}
+		});	
+		
+		data.pi = window.location.search.split('=')[1];
+		data.id = e.srcElement.id;
+
+		$.ajax({'url': '/update_time_entry/', 'type': 'POST', 'dataType': 'JSON', 'data': data, 'success': function(obj){
+			window.location.reload();
+		}});
+		
+	}else{	
+		var cur_tr = $('.tr_entry#' + e.srcElement.id);
+		$('.tr_entry').each(function(index, tr_ele){
+			if($(tr_ele).attr('id') != $(cur_tr).attr('id')){
+				$(tr_ele).css('opacity', 0.2);
+			}	
+		});
+		
+		$('.tr_entry#' + e.srcElement.id).children().each(function(index, child){
+			var td_div = $(child).find('div');
+			if(td_div){
+				$(td_div).attr('contenteditable', true);
+			}
+		});	
+		
+		$(e.srcElement).removeClass('icon-edit');
+		$(e.srcElement).addClass('icon-ok');
+	}
+});
+
+
+
+
+
+
+
+var canvas_json = {}
+var month = []
+
+$('.canvas_ele').each(function(index, ele){	
+	var st = $(ele).find('.canvas_start_time').html();
+	var et = $(ele).find('.canvas_end_time').html();
+	var d = $(ele).find('.canvas_date').html();
+	var fd = new Date(d + " " + st);	
+	var ld = new Date(d + " " + et);	
+	
+	if(month.indexOf(fd.getMonth()+1) == -1){
+		month.push(fd.getMonth()+1)	
+	}	
+	
+	
+	var dif;
+	if(ld < fd){
+		dif = new TimeSpan(fd-ld);
+		var temp = new Date(d + " 23:59:59")
+		var temp0 = temp.next();		
+		var temp1 = new Date(temp0.toString("yyyy-MM-dd") + " 00:00:00")		
+		var temp2 = new TimeSpan(temp-fd).toString();		
+		var temp3 = new TimeSpan(ld-temp1).toString();		
+		var result = addTimes(temp3, temp2);		
+		dif = result;
+	}else{
+		dif = new TimeSpan(ld-fd);
+		dif = dif.toString();
+	}
+	
+	if(canvas_json[d]){
+		canvas_json[d] = addTimes(dif, canvas_json[d]);
+	}else{
+		canvas_json[d] = "00:00:00";
+		canvas_json[d] = addTimes(dif, canvas_json[d]);
+	}
+});
+month.sort();
+var heig = 400;
+var wid = 850;
+
+var can = document.getElementById('canvas');
+can.width = wid;
+can.height = heig;
+var ctx = can.getContext('2d');
+
+ctx.fillStyle = 'white';
+ctx.fillRect(0,0,can.width, can.height);
+var xstep = can.width/(month.length * 36);
+var ystep = can.height/28;
+var x = 0;
+var y = -20;
+
+ctx.translate(1,heig-10);
+ctx.strokeStyle = "black";
+ctx.font = "bold 14px Arial";
+
+
+for(var i = 0; i < 25; i++){
+	
+	if(i % 4 == 0){
+		ctx.fillStyle = 'black';
+		ctx.fillText(i, 0, y);		
+	}
+	y -= ystep;
+}
+
+y = 1;
+x = 20;
+
+for(var i = 0; i < month.length; i++){
+	ctx.fillStyle = 'green';	
+	ctx.fillText(month[i], x + (wid/month.length)*0.5, y);
+	for(var j = 0; j < 32; j++){		
+		for(var key in canvas_json){
+			var splitted = key.split("-");
+			var day = parseInt(splitted[2]);			
+			var mon = splitted[1];			
+			if(day == j & mon == month[i]){			
+				ctx.beginPath();	
+				var val = parseInt(canvas_json[key].split(":")[0]);
+				ctx.fillStyle = 'red';
+				ctx.arc(x,(-1 * val * ystep)-25, 3, 0, Math.PI*2);
+		    	ctx.fill();
+			}
+		}
+		ctx.fillStyle = 'black';
+		if(j % 5 == 0){
+			ctx.beginPath();
+		    var y = 1;
+		    ctx.fillText(j, x, y - 20);		
+		}
+		x += xstep;		
+	}
+	x += 5 * xstep; 
+}
+
+
+
+
+
+</script>
