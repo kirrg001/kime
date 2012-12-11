@@ -1,32 +1,49 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span11">
-			{% for user in users.all %}
-				user
-			{% endfor %}
+			<ul class="nav nav-tabs">
+				{% for u in users.all %}
+					{% if u.id == user.id %}
+						<li class="active"><a href="#home" data-toggle="tab">{{ u }}</a></li>
+					{% else %}
+						<li><a href="#home" data-toggle="tab">{{ u }}</a></li>
+					{% endif %}										
+				{% endfor %}			  			  
+			</ul>			
 		</div>
 	</div>
+	</br>
+	
 	<div class="row-fluid">
-	    <div id="time" class="span11">
+	    <div id="time" class="span8">
 	    	<table class="table" id="timer_table" style="table-layout:fixed;">
 				<tr>
-				  <td style="background-color: white" width="100px"><div id="start_time">start time</div></td>
-				  <td style="background-color: white" width="100px"><div id="end_time">end time</div></td>
-				  <td style="background-color: white" width="100px"><div id="date">day</div></td>
-				  <td style="background-color: white" width="400px"><div contenteditable id="description">description</div></td>
-				  <td style="background-color: white" width="30px" id="upload_time_td"></td>				  
-				  <td style="background-color: white" width="30px" id="clear_time_td"></td>
-				</tr>	  
-			</table>
-			<button id="timer-button" type="submit" class="btn-large btn-success" style="width:200px">
+					<td style="border-top: 0 !important; font-weight: 300; color: rgba(0, 0, 0, 0.5)" width="100px"><div id="date"></div></td>
+				  	<td style="font-weight: 300; font-style: italic; border-top: 0 !important; text-align: center" width="100px"><div id="start_time">start time</div></td>
+				  	<td width="10px" style="border: 0 !important">-</td>
+				  	<td style="font-weight: 300; font-style: italic; border-top: 0 !important; text-align: center" width="100px"><div id="end_time">end time</div></td>
+				  
+				</tr>
+			</table>											
+		</div>
+		<div class="span4" style="padding-left: 50px">
+			<button id="timer-button" type="submit" class="btn-large btn-success" style="width:180px">
 			  start
 			</button>
-	    </div>
+		</div>
   </div>
 	
+	<div class="row_fluid">
+		<div class="span8">		
+			<div contenteditable spellcheck="false" id="description" style="border: 1px dashed black; font-weight: 50; color: black; visibility: hidden;font-size: 20px;font-family: Helvetica; padding-top: 18px; margin-bottom: 50px; font-weight:300; padding-left: 20px;border-radius: 10px; height: 0px" width="800px">description</div>			
+		</div>
+		<div class="span4" style="padding-top: 40px;">
+			<div style="border-top: 0 !important;" width="300px" id="upload_time_td"></div>				  
+			<div style="border-top: 0 !important; margin-top: 5px" width="300px" id="clear_time_td"></div>
+		</div>
+	</div>
 	
-	
-  <div class="row-fluid" style="margin-top: 50px">
+  <div class="row-fluid">
     <div class="span11">
       <table class="table" style="table-layout:fixed">
       	<!--
@@ -96,6 +113,7 @@
 
 
 <script>
+$('#date').html(new Date().toString("yyyy-MM-dd"));
 sum = undefined;
 
 function addTimes(t1, t2){
@@ -203,12 +221,17 @@ if(sum_s.toString().length == 1){
 $('.sum').html(sum_h + ":" + sum_m + ":" + sum_s);
 
 
-if(sessionStorage.end_time){	
+if(sessionStorage.end_time){
+	$('#description').css('visibility', 'visible');
+	$('#description').animate({
+		height: "100px",
+	}, 1500)
+		
 	$('#start_time').html(sessionStorage.start_time);
 	$('#date').html(sessionStorage.day);
 	$('#description').html(sessionStorage.description);
-	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer" class="icon-ok"></i>');
-	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer" class="icon-remove"></i>');
+	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer;" class="icon-ok icon-large"></i> save');
+	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer" class="icon-remove icon-large"></i> delete');
 	$('#upload_time').bind('click', upload_time_td);
 	$('#clear_time').bind('click', clear_time_td);
 	
@@ -247,11 +270,15 @@ function start_interval(cur_d){
 }
 
 $('#timer-button').bind('click', function(e){		
-	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer" class="icon-ok"></i>');
-	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer" class="icon-remove"></i>');
+	$('#upload_time_td').html('<i id="upload_time" style="cursor: pointer;" class="icon-ok icon-large"></i> save');
+	$('#clear_time_td').html('<i id="clear_time" style="cursor: pointer;" class="icon-remove icon-large"></i> delete');
 	$('#upload_time').bind('click', upload_time_td);
 	$('#clear_time').bind('click', clear_time_td);
 	
+	$('#description').css('visibility', 'visible');
+	$('#description').animate({
+		height: "100px",
+	}, 1500)
 	
 	//set to resume
 	if($('#timer-button').hasClass('btn-danger')){
@@ -289,6 +316,11 @@ $('#timer-button').bind('click', function(e){
 
 
 function clear_time_td(e){
+	try{
+		clearInterval(interval);
+	}catch(e){
+		
+	}
 	sessionStorage.clear();
 	$('#start_time').html("start time");
 	$('#end_time').html("end time");
@@ -300,6 +332,11 @@ function clear_time_td(e){
 	$('#timer-button').removeClass('resume');
     $('#timer-button').addClass('btn-success');    
 	$('#timer-button').html('start');	
+	$('#description').animate({
+		height: "0px",
+	}, 1500, function(){
+		$('#description').css('visibility', 'hidden');
+	})
 }
 
 

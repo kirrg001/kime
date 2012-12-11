@@ -62,7 +62,7 @@ def projects(request):
     
     number_of_entries = range(int(math.ceil((len(time_entries) / float(l)))))    
     
-    jsonStr = render_to_string('time_entries.html', {'time_entries' : time_entries, 'os': os, 'limit': limit, 'pi': pi, 'number_of_entries': number_of_entries, 'users': project.users})
+    jsonStr = render_to_string('time_entries.html', {'time_entries' : time_entries, 'os': os, 'limit': limit, 'pi': pi, 'number_of_entries': number_of_entries, 'users': project.users, 'user': user})
     jsonStr = render_to_string('online.html', {'time_entries' : jsonStr, 'projects': projects, 'user': user})
     return render_to_response('layout.html', {'content': jsonStr}, RequestContext(request))
 

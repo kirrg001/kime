@@ -1,0 +1,422 @@
+-- MySQL dump 10.13  Distrib 5.5.28, for Linux (x86_64)
+--
+-- Host: localhost    Database: kirrg_kime
+-- ------------------------------------------------------
+-- Server version	5.5.28-29.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `auth_group`
+--
+
+DROP TABLE IF EXISTS `auth_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group`
+--
+
+LOCK TABLES `auth_group` WRITE;
+/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_group_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_group_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `group_id` (`group_id`,`permission_id`),
+  KEY `auth_group_permissions_bda51c3c` (`group_id`),
+  KEY `auth_group_permissions_1e014c8f` (`permission_id`),
+  CONSTRAINT `group_id_refs_id_3cea63fe` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `permission_id_refs_id_a7792de1` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group_permissions`
+--
+
+LOCK TABLES `auth_group_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_permission`
+--
+
+DROP TABLE IF EXISTS `auth_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
+  KEY `auth_permission_e4470c6e` (`content_type_id`),
+  CONSTRAINT `content_type_id_refs_id_728de91f` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_permission`
+--
+
+LOCK TABLES `auth_permission` WRITE;
+/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
+INSERT INTO `auth_permission` VALUES (1,'Can add permission',1,'add_permission'),(2,'Can change permission',1,'change_permission'),(3,'Can delete permission',1,'delete_permission'),(4,'Can add group',2,'add_group'),(5,'Can change group',2,'change_group'),(6,'Can delete group',2,'delete_group'),(7,'Can add user',3,'add_user'),(8,'Can change user',3,'change_user'),(9,'Can delete user',3,'delete_user'),(10,'Can add content type',4,'add_contenttype'),(11,'Can change content type',4,'change_contenttype'),(12,'Can delete content type',4,'delete_contenttype'),(13,'Can add session',5,'add_session'),(14,'Can change session',5,'change_session'),(15,'Can delete session',5,'delete_session'),(16,'Can add site',6,'add_site'),(17,'Can change site',6,'change_site'),(18,'Can delete site',6,'delete_site'),(19,'Can add log entry',7,'add_logentry'),(20,'Can change log entry',7,'change_logentry'),(21,'Can delete log entry',7,'delete_logentry'),(22,'Can add project',8,'add_project'),(23,'Can change project',8,'change_project'),(24,'Can delete project',8,'delete_project'),(25,'Can add migration history',9,'add_migrationhistory'),(26,'Can change migration history',9,'change_migrationhistory'),(27,'Can delete migration history',9,'delete_migrationhistory'),(28,'Can add time entry',10,'add_timeentry'),(29,'Can change time entry',10,'change_timeentry'),(30,'Can delete time entry',10,'delete_timeentry');
+/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user`
+--
+
+DROP TABLE IF EXISTS `auth_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) NOT NULL,
+  `first_name` varchar(30) NOT NULL,
+  `last_name` varchar(30) NOT NULL,
+  `email` varchar(75) NOT NULL,
+  `password` varchar(128) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `last_login` datetime NOT NULL,
+  `date_joined` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user`
+--
+
+LOCK TABLES `auth_user` WRITE;
+/*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
+INSERT INTO `auth_user` VALUES (1,'ki','','','ki@ki.de','pbkdf2_sha256$10000$CyBG19dY7wtB$wK4oPkcwOROKUeyd1WaQfMorbqpqUB3zHo2U9/P+7uc=',1,1,1,'2012-08-13 20:59:05','2012-08-10 14:59:42'),(2,'kirrg','','','','pbkdf2_sha256$10000$0DcuubjET73G$EV/4LRGIGPIh6EjZtrSCNw8JtF5vbdpgjXFH+kJ8de0=',0,1,0,'2012-11-03 16:31:04','2012-08-10 15:00:19'),(3,'knob','','','','pbkdf2_sha256$10000$Jmty1YCHMJuI$Rl2WGFgy3YeIyOvqlhrJ8shM6PHbjFA2OHfT1OPabCw=',0,1,0,'2012-09-16 05:34:11','2012-08-10 15:00:34');
+/*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_groups`
+--
+
+DROP TABLE IF EXISTS `auth_user_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`group_id`),
+  KEY `auth_user_groups_fbfc09f1` (`user_id`),
+  KEY `auth_user_groups_bda51c3c` (`group_id`),
+  CONSTRAINT `group_id_refs_id_f0ee9890` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `user_id_refs_id_831107f1` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_groups`
+--
+
+LOCK TABLES `auth_user_groups` WRITE;
+/*!40000 ALTER TABLE `auth_user_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_user_user_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_user_user_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_user_user_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`permission_id`),
+  KEY `auth_user_user_permissions_fbfc09f1` (`user_id`),
+  KEY `auth_user_user_permissions_1e014c8f` (`permission_id`),
+  CONSTRAINT `permission_id_refs_id_67e79cb` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  CONSTRAINT `user_id_refs_id_f2045483` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_user_user_permissions`
+--
+
+LOCK TABLES `auth_user_user_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_user_user_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_user_user_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_admin_log`
+--
+
+DROP TABLE IF EXISTS `django_admin_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_admin_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_time` datetime NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `content_type_id` int(11) DEFAULT NULL,
+  `object_id` longtext,
+  `object_repr` varchar(200) NOT NULL,
+  `action_flag` smallint(5) unsigned NOT NULL,
+  `change_message` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `django_admin_log_fbfc09f1` (`user_id`),
+  KEY `django_admin_log_e4470c6e` (`content_type_id`),
+  CONSTRAINT `content_type_id_refs_id_288599e6` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
+  CONSTRAINT `user_id_refs_id_c8665aa` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_admin_log`
+--
+
+LOCK TABLES `django_admin_log` WRITE;
+/*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2012-08-10 15:00:19',1,3,'2','kirrg',1,''),(2,'2012-08-10 15:00:34',1,3,'3','knob',1,''),(3,'2012-08-10 23:04:30',1,8,'1','Project object',1,''),(4,'2012-08-10 23:13:20',1,8,'1','Project object',3,''),(5,'2012-08-10 23:31:24',1,8,'1','Project object',3,''),(6,'2012-08-10 23:34:01',1,8,'1','Project object',1,''),(7,'2012-08-10 23:47:37',1,8,'1','Project object',2,'Changed name and deadline.'),(8,'2012-08-10 23:48:15',1,8,'2','Project object',1,''),(9,'2012-08-10 23:48:55',1,8,'2','Project object',3,''),(10,'2012-08-11 00:19:50',1,8,'1','Project object',1,''),(11,'2012-08-11 01:12:35',1,8,'1','Project object',1,''),(12,'2012-08-11 01:19:43',1,10,'1','TimeEntry object',1,''),(13,'2012-08-11 01:20:34',1,10,'2','TimeEntry object',1,''),(14,'2012-08-11 11:37:57',1,10,'15','TimeEntry object',3,''),(15,'2012-08-11 11:37:57',1,10,'14','TimeEntry object',3,''),(16,'2012-08-11 11:37:57',1,10,'13','TimeEntry object',3,''),(17,'2012-08-11 11:37:57',1,10,'12','TimeEntry object',3,''),(18,'2012-08-11 11:37:57',1,10,'11','TimeEntry object',3,''),(19,'2012-08-11 11:37:57',1,10,'10','TimeEntry object',3,''),(20,'2012-08-11 11:37:57',1,10,'9','TimeEntry object',3,''),(21,'2012-08-11 11:37:57',1,10,'8','TimeEntry object',3,''),(22,'2012-08-11 11:37:57',1,10,'7','TimeEntry object',3,''),(23,'2012-08-11 11:37:57',1,10,'6','TimeEntry object',3,''),(24,'2012-08-11 11:37:57',1,10,'5','TimeEntry object',3,''),(25,'2012-08-11 11:37:57',1,10,'4','TimeEntry object',3,''),(26,'2012-08-11 11:37:57',1,10,'3','TimeEntry object',3,''),(27,'2012-08-11 11:37:57',1,10,'2','TimeEntry object',3,''),(28,'2012-08-11 11:37:57',1,10,'1','TimeEntry object',3,''),(29,'2012-08-12 19:44:45',1,10,'24','TimeEntry object',2,'Changed start_time and end_time.'),(30,'2012-08-12 20:41:47',1,10,'25','TimeEntry object',2,'Changed end_time.'),(31,'2012-08-13 20:59:34',1,10,'52','TimeEntry object',2,'Changed start_time and end_time.'),(32,'2012-08-13 20:59:45',1,10,'51','TimeEntry object',2,'Changed start_time and end_time.');
+/*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_content_type`
+--
+
+DROP TABLE IF EXISTS `django_content_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_content_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `app_label` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `app_label` (`app_label`,`model`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_content_type`
+--
+
+LOCK TABLES `django_content_type` WRITE;
+/*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
+INSERT INTO `django_content_type` VALUES (1,'permission','auth','permission'),(2,'group','auth','group'),(3,'user','auth','user'),(4,'content type','contenttypes','contenttype'),(5,'session','sessions','session'),(6,'site','sites','site'),(7,'log entry','admin','logentry'),(8,'project','kime','project'),(9,'migration history','south','migrationhistory'),(10,'time entry','kime','timeentry');
+/*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_session`
+--
+
+DROP TABLE IF EXISTS `django_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_session` (
+  `session_key` varchar(40) NOT NULL,
+  `session_data` longtext NOT NULL,
+  `expire_date` datetime NOT NULL,
+  PRIMARY KEY (`session_key`),
+  KEY `django_session_c25c2c28` (`expire_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_session`
+--
+
+LOCK TABLES `django_session` WRITE;
+/*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
+INSERT INTO `django_session` VALUES ('14423fb581fa6a5c5a618b2353ab2452','NDBjYmI5ODdlM2I5ZWJkMzg1Mjc3MDlmMzVhYzE3ZTA3ZGU5MzdiYzqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n','2012-09-21 09:34:48'),('48d3df0b7d4bfe8743f3f892aeaeb02e','NDBjYmI5ODdlM2I5ZWJkMzg1Mjc3MDlmMzVhYzE3ZTA3ZGU5MzdiYzqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n','2012-09-07 08:30:20'),('4dbc8f7e2555c0b29f3bce13946722dc','NDBjYmI5ODdlM2I5ZWJkMzg1Mjc3MDlmMzVhYzE3ZTA3ZGU5MzdiYzqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n','2012-11-17 16:31:04'),('905f8a81a3d604dc1c43db26f239a3d4','NDBjYmI5ODdlM2I5ZWJkMzg1Mjc3MDlmMzVhYzE3ZTA3ZGU5MzdiYzqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n','2012-08-27 23:36:42'),('b25daf8f38ea435941c523516895df3c','MWNjZWI5ZDZjNWRmNDZjYmJmZDBhYTBiMjJmMjYzZTIwZDQxM2U2ODqAAn1xAS4=\n','2012-08-27 02:32:39'),('b4d6f5e1549cf82fd7fbcdaf1e0949b1','NGQ0YjEzYzM4ZmZiYjI5ZDk2MWI3N2YxMDMyMTZmNDg5YWM1NTBlNTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQN1Lg==\n','2012-09-12 08:15:34'),('bdd842d0e939078a96abf6dc3a7eb6fa','NDBjYmI5ODdlM2I5ZWJkMzg1Mjc3MDlmMzVhYzE3ZTA3ZGU5MzdiYzqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n','2012-09-01 14:47:21'),('dcca58c32f918ff7982250e2feb6bb13','NGQ0YjEzYzM4ZmZiYjI5ZDk2MWI3N2YxMDMyMTZmNDg5YWM1NTBlNTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQN1Lg==\n','2012-08-29 04:49:33'),('de120f9a002e60afa941e12d893dbffa','NGQ0YjEzYzM4ZmZiYjI5ZDk2MWI3N2YxMDMyMTZmNDg5YWM1NTBlNTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQN1Lg==\n','2012-09-30 05:34:11');
+/*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_site`
+--
+
+DROP TABLE IF EXISTS `django_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `django_site` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(100) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_site`
+--
+
+LOCK TABLES `django_site` WRITE;
+/*!40000 ALTER TABLE `django_site` DISABLE KEYS */;
+INSERT INTO `django_site` VALUES (1,'example.com','example.com');
+/*!40000 ALTER TABLE `django_site` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `kime_project`
+--
+
+DROP TABLE IF EXISTS `kime_project`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `kime_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `deadline` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `kime_project`
+--
+
+LOCK TABLES `kime_project` WRITE;
+/*!40000 ALTER TABLE `kime_project` DISABLE KEYS */;
+INSERT INTO `kime_project` VALUES (1,'eins.de','2012-10-31');
+/*!40000 ALTER TABLE `kime_project` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `kime_project_users`
+--
+
+DROP TABLE IF EXISTS `kime_project_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `kime_project_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_id` (`project_id`,`user_id`),
+  KEY `user_id_refs_id_400ef8f5` (`user_id`),
+  CONSTRAINT `project_id_refs_id_3317636c` FOREIGN KEY (`project_id`) REFERENCES `kime_project` (`id`),
+  CONSTRAINT `user_id_refs_id_400ef8f5` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `kime_project_users`
+--
+
+LOCK TABLES `kime_project_users` WRITE;
+/*!40000 ALTER TABLE `kime_project_users` DISABLE KEYS */;
+INSERT INTO `kime_project_users` VALUES (1,1,2),(2,1,3);
+/*!40000 ALTER TABLE `kime_project_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `kime_timeentry`
+--
+
+DROP TABLE IF EXISTS `kime_timeentry`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `kime_timeentry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `description` varchar(400) NOT NULL,
+  `day` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `kime_timeentry`
+--
+
+LOCK TABLES `kime_timeentry` WRITE;
+/*!40000 ALTER TABLE `kime_timeentry` DISABLE KEYS */;
+INSERT INTO `kime_timeentry` VALUES (24,1,3,'db schema','2012-08-12','18:15:00','21:10:02'),(25,1,3,'multi upload for photogallery','2012-08-12','09:15:00','10:40:00'),(51,1,3,'multi upload for photogallery','2012-08-13','18:30:00','22:45:00'),(52,1,3,'db schema','2012-08-13','18:00:00','18:30:00'),(101,1,3,'multi upload for photogallery','2012-08-15','11:50:21','12:47:37'),(102,1,2,'refactoring event package, changed model event attribute: details to description, testing create event','2012-08-15','13:05:59','15:05:46'),(103,1,3,'multi upload for photogallery','2012-08-15','14:59:54','16:28:27'),(104,1,2,'delete facebook event','2012-08-15','15:59:19','17:00:36'),(105,1,3,'multi upload for photogallery','2012-08-15','17:00:52','23:15:35'),(106,1,2,'AI: location/venue facebook, autocomplete','2012-08-16','16:42:24','19:20:38'),(107,1,2,'update event model','2012-08-16','22:47:08','00:47:11'),(108,1,2,'multiple database testing','2012-08-17','01:20:24','03:53:24'),(110,1,3,'multi upload for photogallery','2012-08-17','11:00:00','22:00:00'),(111,1,2,'template filter/simple tags','2012-08-18','00:39:33','02:22:06'),(112,1,2,'sourced out facebook config data','2012-08-18','03:00:28','03:50:28'),(113,1,3,'multi upload for photogallery','2012-08-18','10:30:16','12:45:19'),(114,1,3,'multi upload for photogallery','2012-08-18','13:17:58','14:32:17'),(115,1,3,'multi upload for photogallery','2012-08-18','13:17:58','18:00:17'),(121,1,2,'read some libs for facebook backend. thinking about love, facebook and the sun','2012-08-20','23:05:47','01:06:36'),(125,1,2,'fb oauth via backend, create fb_user model','2012-08-22','21:34:24','23:35:09'),(126,1,2,'lighttpd','2012-08-24','15:30:27','16:45:57'),(127,1,2,'lighttpd','2012-08-27','17:03:45','23:03:47'),(128,1,3,'preperation for meeting','2012-08-20','12:00:19','15:04:31'),(132,1,2,'facebook backend','2012-08-28','23:13:52','01:12:50'),(133,1,3,'lighty server setup','2012-08-27','17:00:48','22:30:03'),(134,1,3,'multi upload for photogallery','2012-08-29','14:30:38','18:00:33'),(135,1,2,'fb backend, admin fb','2012-09-03','17:53:30','01:00:00'),(136,1,3,'delete uploaded photos incl. cached thumbnails from filesystem; watermark on photo upload','2012-09-03','18:00:00','23:30:56'),(137,1,3,'watermark on photo upload','2012-09-04','19:30:21','01:40:34'),(138,1,2,'django-chronograph, fb backend, user auth','2012-09-04','19:30:08','03:09:51'),(139,1,2,'event archiv','2012-09-05','16:54:53','17:45:42'),(140,1,2,'auth, fb login admin, pair prog. , newsletter, crontab','2012-09-05','17:00:01','04:00:01'),(141,1,3,'refactored multiuploader, outsourced multiuploader into own package, multi delete, logging, populate multi form with existing images','2012-09-05','17:00:05','03:30:37'),(142,1,2,'fb search to backend, pair prog, fb create to backend','2012-09-06','15:34:59','21:34:59'),(143,1,3,'edit photoalbum bugfixes, django logging','2012-09-06','15:00:00','21:30:56'),(144,1,2,'admin fb','2012-09-07','19:02:19','03:02:20'),(145,1,3,'delete images from photoalbum, save images in 3 sizes&nbsp;','2012-09-07','16:30:30','02:00:33'),(146,1,2,'client fb change','2012-09-09','00:32:48','03:32:48'),(147,1,2,'cross domain session, subdomains, hosts, admin, multi db testing, single db testing','2012-09-11','09:00:36','15:22:36'),(148,1,2,'cross domain session, subdomains, hosts, admin, multi db testing, single db testing, userprofiles, 2 apps (mz/wi) facebook integration','2012-09-12','10:23:26','18:23:26'),(149,1,2,'first week','2012-07-15','12:29:22','12:29:21'),(150,1,2,'first week','2012-07-25','12:30:18','12:30:17'),(151,1,3,'photoshop layouts','2012-07-15','12:34:23','12:34:22'),(152,1,3,'photoshop layouts','2012-09-16','12:35:16','12:35:15'),(153,1,2,'pair prog, login, news, fotos news','2012-09-17','11:36:57','02:00:57'),(154,1,2,'exception handling, structured templates, sync news, kiffen, pair prog, &nbsp;','2012-09-18','15:00:43','02:38:43'),(155,1,3,'mysql portation; photoalbum sync to facebook','2012-09-17','13:00:47','02:00:55'),(156,1,3,'fuffzn','2012-09-18','15:00:21','02:00:41'),(157,1,2,'facebook multi db, towns','2012-09-13','08:41:01','12:41:01'),(158,1,2,'facebook','2012-09-14','10:42:15','04:42:15');
+/*!40000 ALTER TABLE `kime_timeentry` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `south_migrationhistory`
+--
+
+DROP TABLE IF EXISTS `south_migrationhistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `south_migrationhistory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_name` varchar(255) NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `applied` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `south_migrationhistory`
+--
+
+LOCK TABLES `south_migrationhistory` WRITE;
+/*!40000 ALTER TABLE `south_migrationhistory` DISABLE KEYS */;
+INSERT INTO `south_migrationhistory` VALUES (1,'kime','0001_initial','2012-08-10 23:55:17'),(5,'kime','0002_initial','2012-08-11 00:17:01'),(6,'kime','0003_auto__add_timeentry','2012-08-11 00:17:01'),(7,'kime','0004_initial','2012-08-11 00:17:01'),(8,'kime','0005_initial','2012-08-11 00:17:01'),(9,'kime','0006_initial','2012-08-11 00:17:01'),(10,'kime','0007_auto__add_field_timeentry_user_id','2012-08-11 01:10:36');
+/*!40000 ALTER TABLE `south_migrationhistory` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2012-12-11 12:56:07
